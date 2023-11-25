@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: left;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .food-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .food-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Nutrition Tracker</h1>
+</header>
+
+<main>
+    <ul class="food-list" id="foodList"></ul>
+
+    <p class="total">Total Protein: <span id="totalProtein">0</span> grams</p>
+    <p class="total">Total Fiber: <span id="totalFiber">0</span> grams</p>
+
+    <button onclick="resetTotals()">Reset Totals</button>
+</main>
+
+<script>
+    // Load stored data on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        loadStoredData();
+    });
+
+    let totalProtein = 0;
+    let totalFiber = 0;
+
+    function addFood(foodName, protein, fiber) {
+        const foodList = document.getElementById('foodList');
+        const listItem = document.createElement('li');
+        listItem.className = 'food-item';
+        listItem.innerHTML = `
+            <button onclick="updateTotals(${protein}, ${fiber})">
+                ${foodName} - Protein: ${protein}g, Fiber: ${fiber}g
+            </button>
+        `;
+        foodList.appendChild(listItem);
+    }
+
+    function updateTotals(protein, fiber) {
+        totalProtein += protein;
+        totalFiber += fiber;
+
+        document.getElementById('totalProtein').innerText = totalProtein;
+        document.getElementById('totalFiber').innerText = totalFiber;
+
+        // Save data to localStorage
+        saveData();
+    }
+
+    function saveData() {
+        // Save totals to localStorage
+        localStorage.setItem('totalProtein', totalProtein);
+        localStorage.setItem('totalFiber', totalFiber);
+    }
+
+    function loadStoredData() {
+        // Load totals from localStorage
+        const storedProtein = localStorage.getItem('totalProtein');
+        const storedFiber = localStorage.getItem('totalFiber');
+
+        if (storedProtein !== null && storedFiber !== null) {
+            totalProtein = parseFloat(storedProtein);
+            totalFiber = parseFloat(storedFiber);
+
+            document.getElementById('totalProtein').innerText = totalProtein;
+            document.getElementById('totalFiber').innerText = totalFiber;
+        }
+    }
+
+    function resetTotals() {
+        // Reset totals to zero
+        totalProtein = 0;
+        totalFiber = 0;
+
+        document.getElementById('totalProtein').innerText = totalProtein;
+        document.getElementById('totalFiber').innerText = totalFiber;
+
+        // Save data to localStorage
+        saveData();
+    }
+</script>
+
+<!-- Add your food items using the addFood function -->
+<script>
+    
+    addFood('Milk', 8, 0);
+    addFood('Hard Boiled Egg', 6, 0);
+    addFood('Blueberries 1 cup', 1.07, 3.48);
+    addFood('Low Sodium Potato Chips', 2, 1);
+    addFood('Yogurt', 15, 0);
+    addFood('12 Mini Pretzels', 3, 1);
+    addFood('Three Ounces Deck of Cards Beef', 22, 0);
+    addFood('Hot Chocolate 1% Milk', 8, 2);
+    addFood('Oatmeal', 5, 3);
+    addFood('Pumpkin Seeds 1/8 cup', 4.5, 1);
+    addFood('Protein 1 gram', 1, 0);
+    addFood('Fiber 1 gram', 0, 1);
+    // Add more food items as needed
+</script>
+
+</body>
+</html>
