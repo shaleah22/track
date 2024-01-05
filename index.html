@@ -1,539 +1,235 @@
+newprotein 
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Drill</title>
+    <title>Protein Tracker</title>
     <style>
-        /* Existing styles */
-         body { 
-            font-family: Arial, sans-serif; 
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
         }
-        #levelDisplay { 
-            position: absolute; 
-            right: 20px; 
-            top: 20px; 
+
+        h1 {
+            text-align: center;
         }
-        #questionContainer { 
-            margin-top: 60px; 
-            padding: 10px;
-           
+
+        .food-type {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .food-type h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            width: 100%;
         }
 
 
-        #questionText {
-        font-size: 20px; /* Change this value to increase or decrease the font size */
-    }
-        #questionImage { 
-            max-width: 50%; 
-            height: auto;
+
+
+        .food-item {
             display: block;
-            margin:  ;
-        }
-        #nextQuestionButton {
-            width: 30%;
+
             padding: 10px;
-            margin-top: 10px;
-            font-size: 16px;
+            margin-bottom: 10px;
+            width: 300px;
+            height: 300px;
+            text-align: center;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .food-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        #totals {
+            margin-top: 20px;
             text-align: center;
         }
-        @media (max-width: 768px) {
-            #levelDisplay {
-                position: static;
-                margin-bottom: 20px;
-                text-align: center;
-            }
-            #questionContainer {
-                margin-top: 30px;
-            }
-        }
-        /* ... */
-        #previousQuestionButton {
-            width: 30%;
-            padding: 10px;
-            margin-top: 10px;
-            font-size: 16px;
+
+        button {
+            padding: 1px;
+            font-size: 14px;
             cursor: pointer;
-            background-color: #f44336; /* Red color for the previous button */
-            color: white;
-            border: none;
-            border-radius: 4px;
-            text-align: center;
         }
-        /* ... */
+
+        button:hover {
+            background-color: #ddd;
+        }
     </style>
 </head>
 <body>
-    <div id="levelDisplay"></div>
-    <button id="previousQuestionButton">Previous Question</button>
-    <button id="nextQuestionButton">Next Question</button>
-    <div id="externalLinkContainer"></div>
-    <div id="questionContainer">
-        <img id="questionImage" src="" alt="Question Image">
-        <p id="questionText"></p>
-    </div>
-    <div id="reelContainer" style="display: none;"></div>
-    <div id="mapContainer"></div>
 
-    <script>
-        const questions = [
-        
+<div id="totals">
+    <p>Total Protein: <span id="totalProtein">0</span> grams</p>
+    <p>Total Fiber: <span id="totalFiber">0</span> grams</p>
+    <button onclick="resetTotals()">Reset Totals</button>
+</div>
 
-       
-
-             { question: "June 13 on drive to Ortesei Lake Garda Bike Path If Time. 06/13/24 probably not enough time east side of Lake Garda Bike Path. Instagram says its only 2 km long, the cool part <br><br> Google Maps - Tagliata del Ponale Str. del Ponale, 38066 Riva del Garda TN, Italy",
-              answer: "1",
-              imageUrl: "https://i0.wp.com/outsidethissmalltown.com/wp-content/uploads/2018/07/bikepath-outsidethissmalltown-19.jpg?fit=5719%2C3218&ssl=1",
-
-            
-              externalLink: '<a href="https://www.tourissimo.travel/blog/the-lake-garda-bike-path" target="_blank">info </a>',
-              instagramReel: '<iframe src="https://www.instagram.com/reel/Cw8MHIBsFkE/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57041.8166519074!2d10.791127270869554!3d45.875105163707225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47821770637e6879%3A0x2cd03e54e91a0c19!2sTagliata%20del%20Ponale!5e0!3m2!1sen!2sus!4v1703369681205!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-
-            },
-         
-
-           
-
-           
-
-             { question: "June 13 to June 17 Four nights at Casa Al Sole in Orteisei about a four hour drive from Milan. <br> <br> Search for Casa Al Sole, Streda Scurcià, 2, 39046 Ortisei BZ, Italy in Google Maps",
-              answer: "1",
-              imageUrl: "",
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10970.109741701597!2d11.6704062!3d46.5768097!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x477812f86357c751%3A0x5798ce88fac92c49!2sCasa%20al%20Sole!5e0!3m2!1sen!2sus!4v1703356397335!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-
-            },
-
-              { question: "2.a Seceda in Ortesei. 06/14/24 - FRIDAY SECEDA One Day hike morning <br> Go up the gondola 39 euros and hike. <br>Google Maps  is Secede cable car,  Str. Val d'Anna, 10, 39046 Ortisei BZ, Italy, 06/14/24 - Seceda One Day hike. Go up the gondola and hike 39 euros round trip for cable car",
-              answer: "1",
-              imageUrl: "https://mominitaly.com/wp-content/uploads/2023/06/family-hiking-seceda-dolomites-italy-scaled.jpg",
-              externalLink: '<a href="https://www.google.com/maps/place/Seceda+Ridgeline/@46.601581,11.7341776,3a,75y,90t/data=!3m8!1e2!3m6!1sAF1QipP6ZmrIb-9xkhxdstJ2TxApgqaH9bwQDip76eHJ!2e10!3e12!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2FAF1QipP6ZmrIb-9xkhxdstJ2TxApgqaH9bwQDip76eHJ%3Dw114-h86-k-no!7i4000!8i3000!4m16!1m8!3m7!1s0x477813ee15dae6ab:0xfb0dc80bc6d0534f!2sSeceda!8m2!3d46.5980566!4d11.7241679!10e5!16s%2Fg%2F122n5qh0!3m6!1s0x4778138ebc9a62fb:0x71d97c157cd7bf25!8m2!3d46.601581!4d11.7341776!10e5!16s%2Fg%2F11rq14p8t_?entry=ttu" target="_blank">link name</a>',
-              instagramReel: '<iframe src="https://www.instagram.com/reel/CuVHFmOOOIW/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10969.85259040574!2d11.6704552!3d46.5780808!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x477813eec152c1f5%3A0x914160245397a848!2sSecede%20cable%20car!5e0!3m2!1sen!2sus!4v1703356897594!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-
-            },
-
-            { question: "06/14/24 FRIDAY AFTERNOON? Alpe di Siusi Seiser Arm Mont Blanc Gondola afternoon - do this in the afternoon or the next day, gondola last at 5 pm, how do you get down any other way? <br> <br>  24 Euros up and down, takes about 15 minutes. <br> <br> Google Maps Search - Seilbahnen St.Ulrich - Seiser Alm, Via Setil, 9, 39046 Sankt Ulrich, Autonome Provinz Bozen - Südtirol, Italy ",
-              answer: "1",
-              imageUrl: "https://www.moonhoneytravel.com/wp-content/uploads/2021/01/moonhoneytravel-Alpe-di-Siusi-dolomites-2.jpg",
-              externalLink: '<a href="https://throneandvine.com/alpe-di-siusi-hiking-guide/" target="_blank">Info</a>',
-              instagramReel: '<iframe src="https://www.instagram.com/reel/CvIUNiwpPKb/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3185.7159420167313!2d11.6699571!3d46.5702621!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x477812fe866cd589%3A0xe1265d95276689f8!2sSeilbahnen%20St.Ulrich%20-%20Seiser%20Alm!5e1!3m2!1sen!2sus!4v1703359851129!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-
-            },
-            
-                  { question: "06/15/23 Saturday Rent bike day think about it",
-              answer: "1",
-              imageUrl: "",
-              /*externalLink: '<a href="link" target="_blank">link name</a>',
-              instagramReel: '<iframe src="LINK/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: */
-
-            },
-
-                   { question: "06/16/24 Sunday DRIVE Gardena Pass Dolemites from Orteisei to Cordova is 1 hour drive",
-              answer: "1",
-              instagramReel: '<iframe src="https://www.instagram.com/reel/Cw71zGzsu4z/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10975.532360953397!2d11.809444!3d46.54999945!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47781565cba253b9%3A0xcc38e293b7108587!2sGardena%20Pass!5e0!3m2!1sen!2sus!4v1702899108706!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
-            },
-
-
-
-                 { question: "06/16/23 SUNDAY - ADOLF MUNKEL TRAIL PARCHEGGIO MALGA ZANNES PARKING 8 EUROS FILLS UP FAST EASY THREE HOUR HIKE. ONE HOUR DRIVE FROM HOTEL VAL DI FUNES. <br> <br> Google Map Search Parcheggio Malga Zannes (1), Plattl, 7C, 39054 Renon BZ, Italy ",
-              answer: "1",
-              imageUrl: "https://images.squarespace-cdn.com/content/v1/6127310e067bcd08b5dc4a2b/1691282567622-TM21QICFE0CULMFHMES3/IMG_6262.jpg",
-              externalLink: '<a href="https://www.moonhoneytravel.com/hiking-adolf-munkel-trail-dolomites/" target="_blank">Adolf Munkel</a>',
-              instagramReel: '<iframe src="https://www.instagram.com/reel/ChK5CwCAtjC/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d684.8918327217253!2d11.763032399999998!3d46.635309299999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x477816ce4cb6a251%3A0xfbe7614af956d7c3!2sParcheggio%20Malga%20Zannes%20(1)!5e0!3m2!1sen!2sus!4v1703363974162!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-
-            },
-
-
-
-              { question: " 06/17/24 MONDAY to Austria? Tre Cime di Lavaredo Hike Trailhead looks amazing, a toll road, make sure you have money for toilets, stunning and a must do, fasthest east of the dolomites, go early, brings you right to parking. 30 euros for parking. You can pay either in cash, or by credit card. <br> <br> Google Maps. Tre Cime di Lavaredo Hike Trailhead Unnamed Road, 32041, Auronzo di Cadore BL, Italy ",
-              answer: "1",
-              imageUrl: "https://s27363.pcdn.co/wp-content/uploads/2022/08/Tre-Cime-di-Lavaredo-Trailhead.jpg.optimal.jpg",
-              externalLink: '<a href="https://www.earthtrekkers.com/hiking-tre-cime-di-lavaredo-loop/" target="_blank">tre cime info</a>',
-              instagramReel: '<iframe src="https://www.instagram.com/reel/Cyi7YoHN_ye/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d685.1798568001981!2d12.295384!3d46.6125475!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4779cd9cf210c5e5%3A0xf7a18c2d0b8921b0!2sTre%20Cime%20di%20Lavaredo%20Hike%20Trailhead!5e0!3m2!1sen!2sus!4v1703441230390!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-
-            },
-
-           /*
-
-             { question: " ",
-              answer: "1",
-              imageUrl: "",
-              externalLink: '<a href="link" target="_blank">link name</a>',
-              instagramReel: '<iframe src="LINK/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: 
-
-            },
-            */
-
-             //Italy
-
-
-            
-
-
-            
-            { question: "Cime Gran Cir ",
-              answer: "1",
-              imageUrl: "https://www.moonhoneytravel.com/wp-content/uploads/2021/07/moonhoneytravel-Gran-Cir-Dolomites-27-1024x682.jpg",
-              /*
-              externalLink: '<a href="link" target="_blank">link name</a>',
-              instagramReel: '<iframe src="LINK/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',*/
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2743.4379915981594!2d11.806241400000001!3d46.5588033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x477815dd0a7b6f03%3A0x53d30b9978b3c497!2sGran%20Cir!5e0!3m2!1sen!2sus!4v1703445953738!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
-            },
-
-            
-
-          
-
-            { question: "1 PASSO SELLO",
-              answer: "1",
-              imageUrl: "",
-              externalLink: '<a href="https://wanderyourway.com/passo-gardena-one-of-the-most-beautiful-drives-in-italy/" target="_blank">Link Text Here</a>',
-              instagramReel: '<iframe src="https://www.instagram.com/reel/Cxa2aBEtJgI/embed" width="400" height="480" frameborder="0" allowtransparency="true" autoplay="true"></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10983.784975860091!2d11.7582768!3d46.50917445!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47786ae834380c45%3A0x1d0709882e83eb90!2sSella%20Pass!5e0!3m2!1sen!2sus!4v1702899696422!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
-            },
-
-
-
-            /*
-            { question: "2.a ",
-              answer: "1",
-              imageUrl: "",
-              externalLink: '<a href="link" target="_blank">link name</a>',
-              instagramReel: '<iframe src="LINK/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: 
-
-            },
-
-            */
-
-            
-
-
-
-            //Austria
-
-
-             { question: " 06/17/24 MONDAY drive from Italy to Austria, 170 miles -  grossglockner road, 43 EUROS can buy online. see link. LONG DRIVE DAY. REALLY NEED TO RETHINK THIS PART OF THE TRIP ",
-              answer: "1",
-              imageUrl: "https://www.salzburg.info/deskline/infrastruktur/objekte/grossglockner-hochalpenstrasse_9427/image-thumb__664655__slider-main/Grossglockner%20Hochalpenstrasse-Edelwei%C3%9F-Spitze_9431.jpg",
-              externalLink: '<a href="https://www.grossglockner.at/gg/en/pricesandopeninghours" target="_blank">BUY TICKETS HERE </a>',
-              /*instagramReel: '<iframe src="LINK/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',*/
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10867.210827651874!2d12.842778!3d47.08333244999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x477715a6c2f6e8f5%3A0xd2cd590e3196a135!2sGrossglockner%20High%20Alpine%20Road!5e0!3m2!1sen!2sus!4v1703444894148!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-
-            },
-            
-
-
-
-             { question: "06/17/24 maybe Hochosterwitz Castle, Hoho-ster-vitz, Launsdorf, Austria ",
-              answer: "1",
-              imageUrl: "https://farm5.staticflickr.com/4011/4550877402_8eb63bca38_c.jpg",
-              /*
-              externalLink: '<a href="link" target="_blank">link name</a>',
-              instagramReel: '<iframe src="LINK/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',*/
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10933.837013940563!2d14.4516882!3d46.7558434!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4770137013898889%3A0x7f712102bc6483c9!2sHochosterwitz%20Castle!5e0!3m2!1sen!2sus!4v1703446263530!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-
-            },
+<h1>Protein Tracker</h1>
 
 
 
 
-             { question: "06/18 - 06/19 Hotel Schloss Leopoldskron Salzberg Jun 18-20, 2024, $410 ",
-              answer: "1",
-              imageUrl: "",
-              /*
-              externalLink: '<a href="link" target="_blank">link name</a>',
-              instagramReel: '<iframe src="LINK/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: */
-
-            },
-          
-                //appenzell
 
 
-              { question: "Switzerland APPENZELL", answer: "1", imageUrl: "https://live.staticflickr.com/65535/53410109790_7668ae9e1a_z.jpg" },
 
 
-              { question: "18 Saxer Lucke Appenzell Parking Small potentially frustrating buy ticket from english german machine 36 for straubahn gondola", answer: "1", imageUrl: "https://theportuguesetraveler.com/wp-content/uploads/2022/01/the-saxer-lucke-at-sunset.jpg"  },
-            { question: "19 schafler ridge in appenzell area find wasserauen and the ______bahn", answer: "1", imageUrl: "https://www.journeyera.com/wp-content/uploads/2020/05/interlaken-hiking-guide-hikes-near-interlaken-04228-1024x682.jpg" },
-            { question: "20 What is the name of this location?", answer: "1", imageUrl: "https://www.journeyera.com/wp-content/uploads/2019/10/saxer-lucke-hike-hoher-kasten-05554.jpg" },
-           
+
+<div class="food-type" id="Breakfast">
+    <h2>Breakfast</h2>
+
+
+
+
+
+ <button class="food-item" onclick="addFood('2 Eggs With 3 Egg Whites 21g protein, 1 Milk 8g protein, Low Tortilla Chips 2g protein 2 g fiber', 31, 2)">
+
+         <img src="https://live.staticflickr.com/65535/53438725704_92e9f6f120.jpg" alt="Description" style="width:240px; height:240px; vertical-align:middle;"><br>2 Eggs With 3 Egg Whites 21g protein, 1 Milk 8g protein, Low Tortilla Chips 2g protein 2 g fiber (31g protein, 2g fiber)
+    </button>
+
+
+
+
+    <button class="food-item" onclick="addFood('2 Hard Boiled Eggs 12g protein, 1 Milk 8g protein, 1 Hot Chocolate 8g protein 2g fiber, Low Tortilla Chips 2g protein 2 g fiber', 30, 4)">
+
+         <img src="https://live.staticflickr.com/65535/53438725704_92e9f6f120.jpg" alt="Description" style="width:300px; height:300px; vertical-align:middle;"><br>2 Hard Boiled Eggs 12g protein, 1 Milk 8g protein, 1 Hot Chocolate 8g protein 2g fiber,  Low Tortilla Chips 2g protein 2 g fiber (30g protein, 4g fiber)
+    </button>
+  
+    
+    <button class="food-item" onclick="addFood('2 Hard Boiled Eggs 12g protein, 1 Milk 8g protein, 1 Hot Chocolate 8g protein 2g fiber', 28, 2)">2 Hard Boiled Eggs 12g protein, 1 Milk 8g protein, 1 Hot Chocolate 8g protein 2g fiber (28g protein, 2g fiber)</button>
+  
+    <button class="food-item" onclick="addFood('Two Scrambled Eggs With Six Roasted Cherry Tomatoes & Bowl of Oatmeal with Chia Seeds and Milk', 23.5, 8)">Two Scrambled Eggs With Six Roasted Cherry Tomatoes AND Bowl of Oatmeal with Chia Seeds and Milk (23.5g protein, 8g fiber)</button>
+    <button class="food-item" onclick="addFood('Two Scrambled Eggs With Six Roasted Cherry Tomatoes', 13.5, 1)">Two Scrambled Eggs With Six Roasted Cherry Tomatoes (13.5g protein, 1g fiber)</button>
+    
+    <button class="food-item" onclick="addFood('Banana Bread Slice', 3, 1)">Banana Bread Slice (3g protein, 1g fiber)</button>
+    <button class="food-item" onclick="addFood('Triple Chocolate Muffin', 2, 1)">Triple Chocolate Muffin (2g protein, 1g fiber)</button>
+    <button class="food-item" onclick="addFood('Protein Waffle', 6, 1)">Protein Waffle (6g protein, 1g fiber)</button>
+
+
+
+    
+
+   <!-- Add more breakfast items as needed -->
+</div>
+
+<div class="food-type" id="Lunch">
+    <h2>Lunch</h2>
+    <button class="food-item" onclick="addFood('Cottage Pie & Blueberries', 26.07, 5.48)">Cottage Pie & Blueberries (26.07 g protein, 5.48g fiber)</button>
+    <button class="food-item" onclick="addFood('1/3 of a Homemade Cheese Pizza (Ultra Thin Pizza Crust) With Mozzarella Cheese and No Salt Added Tomato Sauce 10g protein 4g fiber', 10, 4)">1/3 of a Homemade Cheese Pizza (Ultra Thin Pizza Crust) With Mozzarella Cheese and No Salt Added Tomato Sauce 10g protein 4g fiber</button>
+ 
+    <!-- Add more lunch items as needed -->
+</div>
+
+<div class="food-type" id="meat">
+    <h2>Meat</h2>
+    <button class="food-item" onclick="addFood('Chicken', 15, 0)">Chicken (15g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('Beef', 26, 0)">Beef (26g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('Turkey', 23, 0)">Turkey (23g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('Steak', 25, 0)">Steak (25g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('Cottage Pie', 25, 2)">Cottage Pie (25g protein, 2g fiber)</button>
+    <!-- Add more meat items as needed -->
+</div>
+
+<div class="food-type" id="dairy">
+    <h2>Dairy</h2>
+    <button class="food-item" onclick="addFood('Milk', 8, 0)">Milk (8g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('Cheese', 7, 0)">Cheese (7g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('Yogurt', 15, 0)">Yogurt (15g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('Hot Chocolate 1% Milk', 8, 2)">Hot Chocolate 1% Milk (8g protein, 2g fiber)</button>
+    <!-- Add more dairy items as needed -->
+</div>
+
+<div class="food-type" id="snacks">
+    <h2>Snacks</h2>
+    <button class="food-item" onclick="addFood('Low Sodium Tortilla Chips 13', 2, 2)">Low Sodium Tortilla Chips 13 (2g protein, 2g fiber)</button>
+    <button class="food-item" onclick="addFood('Hard Boiled Egg', 6, 0)">Hard Boiled Egg (6g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('12 Mini Pretzels', 3, 1)">12 Mini Pretzels (3g protein, 1g fiber)</button>
+    <button class="food-item" onclick="addFood('Low Sodium Potato Chips', 2, 1)">Low Sodium Potato Chips (2g protein, 1g fiber)</button>
+    <button class="food-item" onclick="addFood('Pumpkin Seeds 1/8 cup', 4.5, 1)">Pumpkin Seeds 1/8 cup (4.5g protein, 1g fiber)</button>
+    <!-- Add more snacks as needed -->
+</div>
+
+<div class="food-type" id="grains">
+    <h2>Grains</h2>
+    <button class="food-item" onclick="addFood('Ezekiel Bread One Slice', 5, 3)">Ezekiel Bread One Slice (5g protein, 3g fiber)</button>
+    <button class="food-item" onclick="addFood('Bowl of Oatmeal with Chia Seeds and Milk', 9.5, 6)">Bowl of Oatmeal with Chia Seeds and Milk (9.5g protein, 6g fiber)</button>
+    <button class="food-item" onclick="addFood('1/4 cup of dry quinoa', 6, 1.5)">1/4 cup of dry quinoa (6g protein, 1.5g fiber)</button>
+   <!-- Add more grain items as needed -->
+</div>
+
+<div class="food-type" id="fruits-vegetables">
+    <h2>Fruits and Vegetables</h2>
+    <button class="food-item" onclick="addFood('Potato', 4.6, 4)">Potato (4.6g protein, 4g fiber)</button>
+    <button class="food-item" onclick="addFood('Banana', 1.3, 3.1)">Banana (1.3g protein, 3.1g fiber)</button>
+    <button class="food-item" onclick="addFood('Blueberries 1 cup', 1.07, 3.48)">Blueberries 1 cup (1.07g protein, 3.48g fiber)</button>
+    <button class="food-item" onclick="addFood('Ten red grapes', 0.4, 0.4)">Ten red grapes (0.4g protein, 0.4g fiber)</button>
+    <button class="food-item" onclick="addFood('Apple', 1, 3)">Apple (1g protein, 3g fiber)</button>
+    <button class="food-item" onclick="addFood('Strawberries 1 cup', 1.11, 3.32)">Strawberries 1 cup (1.11g protein, 3.32g fiber)</button>
    
-            { question: "2.b Hoher Kasten Switzerland Appenzell",
-              answer: "1",
-              imageUrl: "https://www.thefamilyof5.com/post/hoher-kasten-top-of-appenzell-ai-swiss-tour-2020",
-              externalLink: '<a href="link" target="_blank">dead link</a>',
-              instagramReel: '<iframe src="https://www.instagram.com/reel/CxLsUu0sb7k/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30405.615188799788!2d9.465402100365148!3d47.290989665622085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479b24afb641d585%3A0x6da317254da55368!2sHoher%20Kasten!5e0!3m2!1sen!2sus!4v1702982068936!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
+    <!-- Add more fruits and vegetables as needed -->
+</div>
 
-            },
+<div class="food-type" id="nuts">
+    <h2>Nuts</h2>
+    <!-- Add more nut items as needed -->
+    <button class="food-item" onclick="addFood('Simply Trail Mix 1/4 cup', 5, 2)">Simply Trail Mix 1/4 cup (5g protein, 2g fiber)</button>
+</div>
 
+<div class="food-type" id="Protein and Fiber">
+    <h2>Protein and Fiber</h2>
+    <!-- Add more nut items as needed -->
+    <button class="food-item" onclick="addFood('Protein', 1, 0)">Protein (1g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('-1 Protein', -1, 0)">Protein (-1g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('Fiber', 0, 1)">Fiber (0g protein, 1g fiber)</button>
+    <button class="food-item" onclick="addFood('-1 Fiber', 0, -1)">-1 Fiber (0g protein, -1g fiber)</button>
 
-            { question: "13  Flumserberg Alpine Flora Trail near Appenzell. Tannenboden gondola lift 10 chf roundtrip. This trail is accessed from the Tannenboden-Maschgenkamm gondola. Southeast Switzerland.   " , answer: "1", externalLink: '<a href="https://swissfamilyfun.com/flumserberg-flower-trail/" target="_blank">Swiss Family Fun Info</a>', imageUrl: "https://swissfamilyfun.com/wp-content/uploads/2006/09/flumserberg-flower-trail-cloudy.jpg" , map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d173752.34149682036!2d9.13817267599118!3d47.121016567861446!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479b2b361c10e319%3A0x4af1123a0d96917c!2sParking%20Flumserberg%20Tannenboden!5e0!3m2!1sen!2sus!4v1703063921914!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'},
+</div>
 
-            { question: '24 Frumsem Luftseibahn Staubern for Saxer Lucke  <a href="https://www.google.ch/maps/place/Fr%C3%BCmsen,+Luftseilbahn+Staubern/@47.2443611,9.4631503,2271m/data=!3m1!1e3!4m15!1m8!3m7!1s0x479b252e4863ac73:0x935ab6c681f63560!2sFr%C3%BCmsen,+9467+Sennwald,+Switzerland!3b1!8m2!3d47.24509!4d9.47345!16s%2Fg%2F1233dvnxy!3m5!1s0x479b25d0d11698ef:0xda35d23fa891fb38!8m2!3d47.2476748!4d9.4705109!16s%2Fg%2F11h_10vwhm?entry=ttu" target="_blank">Frumsem</a>"', answer: "1", imageUrl: "https://live.staticflickr.com/65535/53403288644_b9f6296239_c.jpg" },
-            
+<!-- Add more food types and items as needed -->
 
+<script>
+    let totalProtein = parseInt(localStorage.getItem('totalProtein')) || 0;
+    let totalFiber = parseInt(localStorage.getItem('totalFiber')) || 0;
 
-            
-          
+    updateTotals();
 
+    function addFood(name, protein, fiber) {
+        totalProtein += protein;
+        totalFiber += fiber;
 
+        updateTotals();
 
+        // You can add additional logic here to store the food item information if needed
+    }
 
+    function updateTotals() {
+        document.getElementById('totalProtein').textContent = totalProtein;
+        document.getElementById('totalFiber').textContent = totalFiber;
 
+        // Save totals to localStorage
+        localStorage.setItem('totalProtein', totalProtein);
+        localStorage.setItem('totalFiber', totalFiber);
+    }
 
+    function resetTotals() {
+        totalProtein = 0;
+        totalFiber = 0;
 
-            //Stoos and Rigi
-             { question: '4 stoos <a href="https://www.stoos.ch/en/pages/parkticket" target="_blank">https://www.stoos.ch</a>', answer: "1", imageUrl: "https://www.leisureopportunities.co.uk/images/HIGH23908_307300.jpg" },
+        updateTotals();
+    }
+</script>
 
-
-                { question: "16  where do you park and get the gondola for grosser mythen? Parkplatz Brunni", answer: "1" , imageUrl: "https://flyingcdn-44f099d7.b-cdn.net/wp-content/uploads/2022/05/Kleiner-Mythen-hike-2-1024x682.jpg", map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10875.554406616333!2d8.7032083!3d47.0424167!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47854d0099547755%3A0xd4804c39b3e2e198!2sParkplatz%20Brunni!5e0!3m2!1sen!2sus!4v1703068327599!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>' },    
-
-
-
-
-            { question: "17  parking for Rigi Panorama Trail ____strasse44", answer: "1", imageUrl: "https://www.homeschwiizhome.com/wp-content/uploads/2017/08/IMG_3778-1-1030x773.jpg" },
-
-
-
-             { question: '14  ___ kulm (hill)  tickets for cogway train about 50 chf round trip with no discount goldau to rigi klum can buy online <a href="https://www.rigi.ch/en/experience/rigi-mountain-railways/cogwheel-train-goldau-rigi-kulm" target="_blank">https://www.rigi.ch/en/experience/rigi-mountain-railways/cogwheel-train-goldau-rigi-kulm</a>"', answer: "1", imageUrl: "https://swissfamilyfun.com/wp-content/uploads/2021/09/rigi-panorama-google-earth-labeled.jpg", instagramReel: '<iframe src="https://www.instagram.com/reel/CxOQck3tgfY/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>', map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2719.042210416905!2d8.530575260308293!3d47.03940252069615!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478557e2f2df2d23%3A0xed7633deb39d8efd!2sParkplatz%20Kr%C3%A4bel!5e0!3m2!1sen!2sus!4v1702983337018!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'},
-            
-
-
-            { question: "22 Parkplatz Brunni for Grosser Mythen. Can pay online 1 CHF per hour for parking", answer: "1", imageUrl: "https://live.staticflickr.com/65535/53402951701_85ed66fbd6_c.jpg" },
-            
-
-
-
-
-            //Brienz
-            
-            { question: "7 Furka Pass Near Grimselpass Overlook", answer: "1", imageUrl: "https://static.wixstatic.com/media/a65833_5ccf1a335b2a4ce78592c3cff4a3622e~mv2.jpg/v1/fill/w_1428,h_1086,al_c/a65833_5ccf1a335b2a4ce78592c3cff4a3622e~mv2.jpg", map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10970.999998607514!2d8.4148637!3d46.57240895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47857938f20195e9%3A0x4ec4487edce90c12!2sFurka%20Pass!5e0!3m2!1sen!2sus!4v1702898948413!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',  },
-            
-            
-            { question: "10  Brienzer Rothorn Ridge Trail Parking Parkplatz der Rothorn-Bahn. Northeast side of Brienzersee Lake near Brienz ", answer: "1", imageUrl: "https://swissfamilyfun.com/wp-content/uploads/2018/06/brienzerrothorn-trail04.jpg" ,  
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1516.4932599505394!2d8.035625047543718!3d46.75542468507287!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478f97538f539f05%3A0x4b4e923fa867960b!2sParkplatz%20der%20Rothorn-Bahn!5e0!3m2!1sen!2sus!4v1702978314488!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'},
-
-            { question: "11  Parking Parkplatz der Rothorn-Bahn for Rothorn Ridge Trail", answer: "1", imageUrl: "https://swissfamilyfun.com/wp-content/uploads/2018/06/brienzrothorn-parking-map.jpg", map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10934.004183167834!2d8.0364752!3d46.7550195!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478f97538f539f05%3A0x4b4e923fa867960b!2sParkplatz%20der%20Rothorn-Bahn!5e0!3m2!1sen!2sus!4v1703064595080!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>' },
-
-            { question: "12 The _____ gorge is twelve chf and the Parkplatz Aareschlucht West Free Parking Lot. 15 MINUTES SOUTHEAST OF BRIENZ" , answer: "1", imageUrl: "https://portfolio.photoseek.com/img-get/I0000_iQ65cQDP7g/s/1200/I0000_iQ65cQDP7g.jpg", map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10941.053544464688!2d8.2030364!3d46.7202663!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478f8f8a2c9307c1%3A0x2b0f97925ba9c8d!2sParkplatz%20Aareschlucht%20West!5e0!3m2!1sen!2sus!4v1702978715425!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>' },
-
-            
-
-             { question: '57 Aare Gorge Aareschlucht <a href="https://www.instagram.com/reel/CuJi6KdN7FQ"target="_blank">Instagram</a>', answer: "1", imageUrl: "https://media.myswitzerland.com/image/fetch/c_lfill,g_auto,w_3200,h_1800/f_auto,q_80,fl_keep_iptc/https://www.myswitzerland.com/-/media/st/gadmin/images/partner/di_renzo_aareschlucht_steg_36164.jpg" },
-
-
-          
-            
-            
-            { question: '12.B Gelmerbahn 36 chf for the cogway train parkplatz nearby is free.  This place is 37 minutes southeast of __________ <a href="https://besucherdienst.kwo.ch/path/app/?rq_AppGuid=8D22CAF932CD8A2075581101B4CB4052EB467914&rq_TargetPageGuid=5A0DA71A66CD9B0335F5D277BD1F03DB01B2E45A&qs_link=53D2B4BEA34BC0DEA00CB096D49DC6F0B7461BEF&qs_mode=new&qs_page=5A0DA71A66CD9B0335F5D277BD1F03DB01B2E45A&qs_reload=5A0DA71A66CD9B0335F5D277BD1F03DB01B2E45A&qs_rq_inetItemPk=enE9824F398C9CDEDED9D00CC91BE5500F8832082A" target="_blank">Gelmerbahn</a>"' , answer: "1", imageUrl: "https://travelmusefamily.com/wp-content/uploads/2016/01/FD847E4B-AACD-4CAE-AF69-857555673F1D.jpeg", instagramReel: '<iframe src="https://www.instagram.com/reel/Cw71zGzsu4z/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>' },
-            
-            { question: "12.C ______ OVERLOOK. CLOSE TO GELMERBAHN IF ROAD IS OPEN. ONE HOUR SOUTHEAST OF BRIENZ IF ROAD OPEN" , answer: "1", imageUrl: "https://www.cycling-challenge.com/wp-content/uploads/2010/09/4977262382_19cb078533_b.jpg" },
-            
-
-
-
-
-
-            
-
-            //Interlaken and Grindelwald
-
-
-
-            { question: "5.B Hotel Berghof Amaranth, next to Interlaken. 30 minutes west of Grindelwald June 24 to 25", answer: "1", imageUrl: "https://media-cdn.tripadvisor.com/media/photo-s/19/2e/ba/f8/hotel-berghof-amaranth.jpg" , map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10952.301534803184!2d7.8565607!3d46.6647728!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478fa478fffa799b%3A0x8b775d5e8e88801b!2sHotel%20Berghof%20Amaranth!5e0!3m2!1sen!2sus!4v1702899442623!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',},
-
-
-
-
-
-            { question: "2 Bisse de Torrent 1Neuf - Savièze, Valaisn",
-              answer: "1",
-              imageUrl: "https://previews.agefotostock.com/previewimage/medibigoff/e3dcb3f747a093d03c41d46c8e82db01/y5d-3847916.jpg",
-              externalLink: '<a href="https://www.google.com/maps/dir/Interlaken,+Switzerland/Bisse+du+Torrent+Neuf,+1965+Savi%C3%A8se,+Switzerland/@46.5088099,7.3568332,10z/data=!4m13!4m12!1m5!1m1!1s0x1453996a31921a05:0x9c111af14c02be00!2m2!1d7.8632049!2d46.6863481!1m5!1m1!1s0x478edd0bf97ac7a7:0x96cd0681f62b5258!2m2!1d7.3233587!2d46.2577788?entry=ttu" target="_blank">Map</a>',
-              instagramReel: '<iframe src="https://www.instagram.com/reel/CxqNVpKsyvA/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: '<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB29Em9jRs7sxUew_W38oGFYOsXR4For6A=Bisse%20de%20Torrent-Neuf%2C%20Savi%C3%A8se%2C%20Switzerland" allowfullscreen></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d11034.480571663093!2d7.3233587!3d46.2577788!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478edd0bf97ac7a7%3A0x96cd0681f62b5258!2sBisse%20du%20Torrent%20Neuf!5e0!3m2!1sen!2sus!4v1702899357946!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
-
-            },
-
-
-
-
-
-
-            { question: "2.c GLACIER CANYON GRINDELWALD ",
-              answer: "1",
-              imageUrl: "",
-              externalLink: '<a href="link" target="_blank">DEAD LINK name</a>',
-              instagramReel: '<iframe src="https://www.instagram.com/reel/CxM3EgnKKym/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2740.6772975474128!2d8.046487200000007!3d46.61338000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478f9c0f125fd42d%3A0x40559d2b018d3cff!2sOUTDOOR%20-%20Glacier%20Canyon%20Grindelwald!5e0!3m2!1sen!2sus!4v1702983041041!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-
-            },
-
-            
-
-
-
-            { question: '3  Alpine Mountain Coaster. 45 minutes southeast of Interlaken by that pretty big lake ', answer: "1", imageUrl: "", instagramReel:  '<iframe src="https://www.instagram.com/reel/Cv87QSYgypk/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>', map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10985.21161245853!2d7.6969517!3d46.5021142!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478f066c91d5553f%3A0xf4a8b7d28698a79d!2sRodelbahn%20Oeschinensee!5e0!3m2!1sen!2sus!4v1702978831497!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>' },
-
- 
-            
-
-            
-            
-
-           
-
-
-
-             
-            { question: "5.c Oeschinensee Need more info  ",
-              answer: "1",
-              imageUrl: "",
-              externalLink: '<a href="link" target="_blank">link name</a>',
-              instagramReel: '<iframe src="https://www.instagram.com/reel/CvrzwHEq6kV/embed" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>',
-              map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10985.938268662327!2d7.7254832!3d46.49851775000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478f08a670704edd%3A0x30815e0b3a5ce4ee!2sOeschinen%20Lake!5e0!3m2!1sen!2sus!4v1702979940553!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-
-            },
-
-
-         
-
-             { question: '21 Mannlichen to Kleine Scheidegg, start in Mannlichen as it is a downhill hike that way. Get a cable car in Grindelwald 32 chf <a href="https://www.interlaken.ch/shop/toi_en/tickets/bergbahn/angebote/maennlichen" target="_blank">Mannlichen</a>"', answer: "1", imageUrl: "https://s27363.pcdn.co/wp-content/uploads/2020/05/Mannlichen-Hike-Switzerland.jpg.optimal.jpg", instagramReel: '<iframe src="https://www.instagram.com/reel/CwnWiW3MnRO/" width="400" height="480" frameborder="0" allowtransparency="true"></iframe>', map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d21923.489689444854!2d7.938064700000001!3d46.618143749999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478f9f36c54cad91%3A0x5f3614ab836416fd!2sStart%20Panoramaweg%20%22M%C3%A4nnlichen%20zur%20Kleinen%20Scheidegg%22!5e0!3m2!1sen!2sus!4v1702984645295!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'},
-            
-            
-
-            { question: '25 Aare Gorge Aareschlucht <a href="https://www.instagram.com/reel/CuJi6KdN7FQ"target="_blank">Instagram</a>', answer: "1", imageUrl: "https://media.myswitzerland.com/image/fetch/c_lfill,g_auto,w_3200,h_1800/f_auto,q_80,fl_keep_iptc/https://www.myswitzerland.com/-/media/st/gadmin/images/partner/di_renzo_aareschlucht_steg_36164.jpg" },
-
-
-
-
-
-
-            { question: "8 Holiday Inn Express Milan-Malpensa right by airport", answer: "1", imageUrl: "https://live.staticflickr.com/65535/53402944771_f7ae972ea8_w.jpg", map: '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d11158.164354885914!2d8.712441!3d45.6399546!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47866165d1517d89%3A0xa1510da0f7510d66!2sHoliday%20Inn%20Express%20Milan%20-%20Malpensa%20Airport%2C%20an%20IHG%20Hotel!5e0!3m2!1sen!2sus!4v1702978530211!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>' },
-
-
-
-
-
-
-            //Before you go
-             { question: " Get a Swiss E-Vignette Online 53 Euros ",
-              answer: "1",
-              imageUrl: "",
-              externalLink: '<a href="https://vignetteswitzerland.com/product-details/" target="_blank">Vignette</a>',
-              
-            },
-
-
-             { question: " Get an Austrian digital Vignette",
-              answer: "1",
-              imageUrl: "",
-              externalLink: '<a href="https://www.asfinag.at/en/toll/vignette/digital-vignette/" target="_blank">Vignette</a>',
-             
-
-            },
-
- 
-
-
-            
-            { question: '5 Crumble up feta cheese. Make a beef ball. Roll it in pepper. Crust it with feta all the way around. Smash with parchment paper  <a href="https://www.instagram.com/reel/Cw8F13wLlyc/?igshid=MzRlODBiNWFlZA==" target="_blank">https://www.instagram.com/reel/Cw8F13wLlyc/?igshid=MzRlODBiNWFlZA==</a> "', answer: "1", imageUrl: "https://live.staticflickr.com/65535/53403104976_b194a0260f_w.jpg", instagramReel: '<iframe src="https://www.instagram.com/reel/Cw8F13wLlyc/embed" width="400" height="480" frameborder="0" allowtransparency="true" autoplay="true"></iframe>', },
-            
-
-            // Existing questions
-            /* ... */
-        ];
-
-        let currentQuestionIndex = 0;
-
-        function loadQuestion(index) {
-            if (index >= 0 && index < questions.length) {
-                currentQuestionIndex = index;
-                displayQuestion(questions[currentQuestionIndex]);
-            } else {
-                alert("No more questions in this direction.");
-            }
-        }
-
-      
-
-
-
-
-
-
-        function displayQuestion(question) {
-            document.getElementById('questionText').innerHTML = question.question;
-            const questionImage = document.getElementById('questionImage');
-            if (question.imageUrl) {
-                questionImage.src = question.imageUrl;
-                questionImage.style.display = 'block';
-            } else {
-                questionImage.style.display = 'none';
-            }
-
-
-
-            if (question.externalLink) {
-                document.getElementById('externalLinkContainer').innerHTML = question.externalLink;
-            } else {
-                document.getElementById('externalLinkContainer').innerHTML = '';
-            }
-
-            const reelContainer = document.getElementById('reelContainer'); 
-            if (question.instagramReel) {
-                reelContainer.innerHTML = question.instagramReel;
-                reelContainer.style.display = 'block';
-            } else {
-                reelContainer.style.display = 'none';
-            }
-
-            const mapContainer = document.getElementById('mapContainer');
-            if (question.map) {
-                mapContainer.innerHTML = question.map;
-                mapContainer.style.display = 'block';
-            } else {
-                mapContainer.style.display = 'none';
-            }
-        }
-
-        function setupQuestionNavigationButtons() {
-            const nextQuestionButton = document.getElementById('nextQuestionButton');
-            nextQuestionButton.onclick = function() {
-                loadQuestion(currentQuestionIndex + 1);
-            };
-
-            const previousQuestionButton = document.getElementById('previousQuestionButton');
-            previousQuestionButton.onclick = function() {
-                loadQuestion(currentQuestionIndex - 1);
-            };
-        }
-
-        function init() {
-            loadQuestion(currentQuestionIndex);
-            setupQuestionNavigationButtons();
-        }
-
-        init();
-    </script>
 </body>
 </html>
