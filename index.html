@@ -131,22 +131,20 @@
    <!-- Add more breakfast items as needed -->
 </div>
 
-<div class="food-type" id="Lunch">
-    <h2>Lunch</h2>
-    <button class="food-item" onclick="addFood('Cottage Pie & Blueberries', 26.07, 5.48)">Cottage Pie & Blueberries (26.07 g protein, 5.48g fiber)</button>
-    <button class="food-item" onclick="addFood('1/3 of a Homemade Cheese Pizza (Ultra Thin Pizza Crust) With Mozzarella Cheese and No Salt Added Tomato Sauce 10g protein 4g fiber', 10, 4)">1/3 of a Homemade Cheese Pizza (Ultra Thin Pizza Crust) With Mozzarella Cheese and No Salt Added Tomato Sauce 10g protein 4g fiber</button>
+<div class="food-type" id="Meals">
+    <h2>Meals</h2>
+    <button class="food-item" onclick="addFood('Cottage Pie & Blueberries', 26.07, 5.48)"><img src="https://live.staticflickr.com/65535/53445909297_0bd32ded80_w.jpg" alt="Description" style="width:240px; height:240px; vertical-align:middle;"><br>Cottage Pie & Blueberries (26.07 g protein, 5.48g fiber)</button>
+    <button class="food-item" onclick="addFood('1/3 of a Homemade Cheese Pizza (Ultra Thin Pizza Crust) With Mozzarella Cheese and No Salt Added Tomato Sauce 10g protein 4g fiber', 10, 4)"><img src="https://live.staticflickr.com/65535/53447093548_d2470957cc_n.jpg" alt="Description" style="width:240px; height:240px; vertical-align:middle;"><br>1/3 of a Homemade Cheese Pizza (Ultra Thin Pizza Crust) With Mozzarella Cheese and No Salt Added Tomato Sauce 10g protein 4g fiber</button>
+    <button class="food-item" onclick="addFood('Lasagna', 20, 3)"><img src="https://thecozycook.com/wp-content/uploads/2022/04/Lasagna-Recipe-f.jpg" alt="Description" style="width:240px; height:240px; vertical-align:middle;"><br>Lasagna (20g protein, 3g fiber)</button>
+    <button class="food-item" onclick="addFood('Beef', 26, 0)"><img src="https://www.allrecipes.com/thmb/5JVfA7MxfTUPfRerQMdF-nGKsLY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/25473-the-perfect-basic-burger-DDMFS-4x3-56eaba3833fd4a26a82755bcd0be0c54.jpg" alt="Description" style="width:240px; height:240px; vertical-align:middle;"><br>Beef (26g protein, 0g fiber)</button>
+     <button class="food-item" onclick="addFood('Steak', 25, 0)"><img src="https://thecozycook.com/wp-content/uploads/2021/06/Filet-Mignon-Recipe-f.jpg" alt="Description" style="width:240px; height:240px; vertical-align:middle;"><br>Steak (25g protein, 0g fiber)</button>
+    <button class="food-item" onclick="addFood('Cottage Pie', 25, 2)"><img src="https://live.staticflickr.com/65535/53447258535_fc6ec3eb2e_w.jpg"Description" style="width:240px; height:240px; vertical-align:middle;"><br>Cottage Pie (25g protein, 2g fiber)</button>
+    
  
     <!-- Add more lunch items as needed -->
 </div>
 
-<div class="food-type" id="meat">
-    <h2>Meat</h2>
-    <button class="food-item" onclick="addFood('Beef', 26, 0)"><img src="https://www.allrecipes.com/thmb/5JVfA7MxfTUPfRerQMdF-nGKsLY=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/25473-the-perfect-basic-burger-DDMFS-4x3-56eaba3833fd4a26a82755bcd0be0c54.jpg" alt="Description" style="width:240px; height:240px; vertical-align:middle;"><br>Beef (26g protein, 0g fiber)</button>
-     <button class="food-item" onclick="addFood('Steak', 25, 0)"><img src="https://thecozycook.com/wp-content/uploads/2021/06/Filet-Mignon-Recipe-f.jpg" alt="Description" style="width:240px; height:240px; vertical-align:middle;"><br>Steak (25g protein, 0g fiber)</button>
-    <button class="food-item" onclick="addFood('Cottage Pie', 25, 2)">Cottage Pie (25g protein, 2g fiber)</button>
-    
-    <!-- Add more meat items as needed -->
-</div>
+
 
 <div class="food-type" id="dairy">
     <h2>Dairy</h2>
@@ -205,7 +203,7 @@
     <img src="https://therecipecritic.com/wp-content/uploads/2021/07/trailmix.jpg" alt="Description" style="width:240px; height:240px; vertical-align:middle;"><br>Simply Trail Mix 1/4 cup (5g protein, 2g fiber)</button>
 </div>
 
-
+<!--
 <div class="food-type" id="grains">
     <h2>Grains</h2>
     <button class="food-item" onclick="addFood('Ezekiel Bread One Slice', 5, 3)">Ezekiel Bread One Slice (5g protein, 3g fiber)</button>
@@ -225,6 +223,8 @@
 
 
     <img src="link" alt="Description" style="width:240px; height:240px; vertical-align:middle;"><br>
+
+    -->
    <!-- Add more grain items as needed -->
 </div>
 
@@ -242,7 +242,7 @@
 
 
 
-<!-- Add more food types and items as needed -->
+
 
 <script>
     let totalProtein = parseInt(localStorage.getItem('totalProtein')) || 0;
